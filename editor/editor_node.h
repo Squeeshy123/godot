@@ -423,7 +423,7 @@ private:
 	PanelContainer *bottom_panel;
 	HBoxContainer *bottom_panel_hb;
 	HBoxContainer *bottom_panel_hb_editors;
-	VBoxContainer *bottom_panel_vb;
+	TabContainer *bottom_panel_vb;
 	Label *version_label;
 	Button *bottom_panel_raise;
 
@@ -833,7 +833,7 @@ public:
 
 	Button *get_pause_button() { return pause_button; }
 
-	Button *add_bottom_panel_item(String p_text, Control *p_item);
+	Control *add_bottom_panel_item(String p_text, Control *p_item);
 	void make_bottom_panel_item_visible(Control *p_item);
 	void raise_bottom_panel_item(Control *p_item);
 	void hide_bottom_panel();

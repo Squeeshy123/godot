@@ -175,7 +175,7 @@ public:
 
 	void add_control_to_container(CustomControlContainer p_location, Control *p_control);
 	void remove_control_from_container(CustomControlContainer p_location, Control *p_control);
-	Button *add_control_to_bottom_panel(Control *p_control, const String &p_title);
+	Control *add_control_to_bottom_panel(Control *p_control, const String &p_title);
 	void add_control_to_dock(DockSlot p_slot, Control *p_control);
 	void remove_control_from_docks(Control *p_control);
 	void remove_control_from_bottom_panel(Control *p_control);

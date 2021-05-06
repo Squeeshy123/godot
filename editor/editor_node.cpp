@@ -4932,25 +4932,28 @@ void EditorNode::_scene_tab_changed(int p_tab) {
 	editor_data.get_undo_redo().commit_action();
 }
 
-Button *EditorNode::add_bottom_panel_item(String p_text, Control *p_item) {
-	Button *tb = memnew(Button);
+Control *EditorNode::add_bottom_panel_item(String p_text, Control *p_item) {
+	/*Button *tb = memnew(Button);
 	tb->set_flat(true);
 	tb->connect("toggled", callable_mp(this, &EditorNode::_bottom_panel_switch), varray(bottom_panel_items.size()));
 	tb->set_text(p_text);
 	tb->set_toggle_mode(true);
 	tb->set_focus_mode(Control::FOCUS_NONE);
+	*/
 	bottom_panel_vb->add_child(p_item);
+	bottom_panel_vb->set_tab_title(bottom_panel_vb->get_child_count()-1, p_text);
 	bottom_panel_hb->raise();
-	bottom_panel_hb_editors->add_child(tb);
+	//bottom_panel_hb_editors->add_child(tb);
 	p_item->set_v_size_flags(Control::SIZE_EXPAND_FILL);
 	p_item->hide();
-	BottomPanelItem bpi;
+	/*BottomPanelItem bpi;
 	bpi.button = tb;
 	bpi.control = p_item;
 	bpi.name = p_text;
-	bottom_panel_items.push_back(bpi);
+	*/
+	//bottom_panel_items.push_back(bpi);
 
-	return tb;
+	return p_item;
 }
 
 void EditorNode::hide_bottom_panel() {
@@ -4987,7 +4990,7 @@ void EditorNode::raise_bottom_panel_item(Control *p_item) {
 }
 
 void EditorNode::remove_bottom_panel_item(Control *p_item) {
-	for (int i = 0; i < bottom_panel_items.size(); i++) {
+	/*for (int i = 0; i < bottom_panel_items.size(); i++) {
 		if (bottom_panel_items[i].control == p_item) {
 			if (p_item->is_visible_in_tree()) {
 				_bottom_panel_switch(false, i);
@@ -5003,10 +5006,10 @@ void EditorNode::remove_bottom_panel_item(Control *p_item) {
 	for (int i = 0; i < bottom_panel_items.size(); i++) {
 		bottom_panel_items[i].button->disconnect("toggled", callable_mp(this, &EditorNode::_bottom_panel_switch));
 		bottom_panel_items[i].button->connect("toggled", callable_mp(this, &EditorNode::_bottom_panel_switch), varray(i));
-	}
+	}*/
 }
 
-void EditorNode::_bottom_panel_switch(bool p_enable, int p_idx) {
+void EditorNode::_bottom_panel_switch(bool p_enable, int p_idx) { /*
 	ERR_FAIL_INDEX(p_idx, bottom_panel_items.size());
 
 	if (bottom_panel_items[p_idx].control->is_visible() == p_enable) {
@@ -5041,18 +5044,19 @@ void EditorNode::_bottom_panel_switch(bool p_enable, int p_idx) {
 			top_split->show();
 		}
 	}
+	*/
 }
-
 void EditorNode::set_docks_visible(bool p_show) {
+	/*
 	docks_visible = p_show;
 	_update_dock_slots_visibility();
-}
+*/}
 
 bool EditorNode::get_docks_visible() const {
 	return docks_visible;
 }
 
-void EditorNode::_toggle_distraction_free_mode() {
+void EditorNode::_toggle_distraction_free_mode() { 
 	if (EditorSettings::get_singleton()->get("interface/editor/separate_distraction_mode")) {
 		int screen = -1;
 		for (int i = 0; i < editor_table.size(); i++) {
@@ -5084,6 +5088,7 @@ void EditorNode::set_distraction_free_mode(bool p_enter) {
 	} else {
 		set_docks_visible(true);
 	}
+	
 }
 
 bool EditorNode::is_distraction_free_mode_enabled() const {
@@ -6557,6 +6562,10 @@ EditorNode::EditorNode() {
 	dock_slot[DOCK_SLOT_LEFT_BR]->add_child(filesystem_dock);
 	dock_slot[DOCK_SLOT_LEFT_BR]->set_tab_title(filesystem_dock->get_index(), TTR("FileSystem"));
 
+	
+	
+
+
 	// Inspector: Full height right
 	dock_slot[DOCK_SLOT_RIGHT_UL]->add_child(inspector_dock);
 	dock_slot[DOCK_SLOT_RIGHT_UL]->set_tab_title(inspector_dock->get_index(), TTR("Inspector"));
@@ -6605,7 +6614,7 @@ EditorNode::EditorNode() {
 	center_split->add_child(bottom_panel);
 	center_split->set_dragger_visibility(SplitContainer::DRAGGER_HIDDEN);
 
-	bottom_panel_vb = memnew(VBoxContainer);
+	bottom_panel_vb = memnew(TabContainer);
 	bottom_panel->add_child(bottom_panel_vb);
 
 	bottom_panel_hb = memnew(HBoxContainer);
@@ -6634,8 +6643,15 @@ EditorNode::EditorNode() {
 	bottom_panel_raise->connect("toggled", callable_mp(this, &EditorNode::_bottom_panel_raise_toggled));
 
 	log = memnew(EditorLog);
-	Button *output_button = add_bottom_panel_item(TTR("Output"), log);
-	log->set_tool_button(output_button);
+	Control *output_button = add_bottom_panel_item(TTR("Output"), log);
+	//==log->set_tool_button(output_button);
+
+	FileSystemDock *fs_d = memnew(FileSystemDock(this));
+
+	fs_d->connect("inherit", callable_mp(this, &EditorNode::_inherit_request));
+	fs_d->connect("instance", callable_mp(this, &EditorNode::_instance_request));
+	fs_d->connect("display_mode_changed", callable_mp(this, &EditorNode::_save_docks));
+	add_bottom_panel_item(TTR("FileSystem"), fs_d);
 
 	old_split_ofs = 0;
 

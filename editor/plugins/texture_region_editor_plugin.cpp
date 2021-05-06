@@ -1114,9 +1114,9 @@ void TextureRegionEditorPlugin::_editor_visiblity_changed() {
 
 void TextureRegionEditorPlugin::make_visible(bool p_visible) {
 	if (p_visible) {
-		texture_region_button->show();
+		//texture_region_button->show();
 		bool is_node_configured = region_editor->is_stylebox() || region_editor->is_atlas_texture() || region_editor->is_ninepatch() || (region_editor->get_sprite() && region_editor->get_sprite()->is_region_enabled()) || (region_editor->get_sprite_3d() && region_editor->get_sprite_3d()->is_region_enabled());
-		if ((is_node_configured && !manually_hidden) || texture_region_button->is_pressed()) {
+		if (is_node_configured && !manually_hidden) {
 			editor->make_bottom_panel_item_visible(region_editor);
 		}
 	} else {
@@ -1124,7 +1124,7 @@ void TextureRegionEditorPlugin::make_visible(bool p_visible) {
 			editor->hide_bottom_panel();
 			manually_hidden = false;
 		}
-		texture_region_button->hide();
+		//texture_region_button->hide();
 		region_editor->edit(nullptr);
 	}
 }
@@ -1179,6 +1179,6 @@ TextureRegionEditorPlugin::TextureRegionEditorPlugin(EditorNode *p_node) {
 	region_editor->hide();
 	region_editor->connect("visibility_changed", callable_mp(this, &TextureRegionEditorPlugin::_editor_visiblity_changed));
 
-	texture_region_button = p_node->add_bottom_panel_item(TTR("TextureRegion"), region_editor);
-	texture_region_button->hide();
+	p_node->add_bottom_panel_item(TTR("TextureRegion"), region_editor);
+	//texture_region_button->hide();
 }

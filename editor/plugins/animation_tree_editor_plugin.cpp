@@ -257,14 +257,14 @@ void AnimationTreeEditorPlugin::make_visible(bool p_visible) {
 	if (p_visible) {
 		//editor->hide_animation_player_editors();
 		//editor->animation_panel_make_visible(true);
-		button->show();
+		//button->show();
 		editor->make_bottom_panel_item_visible(anim_tree_editor);
 		anim_tree_editor->set_process(true);
 	} else {
 		if (anim_tree_editor->is_visible_in_tree()) {
 			editor->hide_bottom_panel();
 		}
-		button->hide();
+		//button->hide();
 		anim_tree_editor->set_process(false);
 	}
 }
@@ -274,8 +274,8 @@ AnimationTreeEditorPlugin::AnimationTreeEditorPlugin(EditorNode *p_node) {
 	anim_tree_editor = memnew(AnimationTreeEditor);
 	anim_tree_editor->set_custom_minimum_size(Size2(0, 300) * EDSCALE);
 
-	button = editor->add_bottom_panel_item(TTR("AnimationTree"), anim_tree_editor);
-	button->hide();
+	editor->add_bottom_panel_item(TTR("AnimationTree"), anim_tree_editor);
+	//button->hide();
 }
 
 AnimationTreeEditorPlugin::~AnimationTreeEditorPlugin() {

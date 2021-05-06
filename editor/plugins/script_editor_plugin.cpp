@@ -1563,12 +1563,12 @@ void ScriptEditor::_notification(int p_what) {
 
 		case CanvasItem::NOTIFICATION_VISIBILITY_CHANGED: {
 			if (is_visible()) {
-				find_in_files_button->show();
+				//find_in_files_button->show();
 			} else {
 				if (find_in_files->is_visible_in_tree()) {
 					editor->hide_bottom_panel();
 				}
-				find_in_files_button->hide();
+				//find_in_files_button->hide();
 			}
 
 		} break;
@@ -3557,12 +3557,12 @@ ScriptEditor::ScriptEditor(EditorNode *p_editor) {
 	find_in_files_dialog->connect(FindInFilesDialog::SIGNAL_REPLACE_REQUESTED, callable_mp(this, &ScriptEditor::_start_find_in_files), varray(true));
 	add_child(find_in_files_dialog);
 	find_in_files = memnew(FindInFilesPanel);
-	find_in_files_button = editor->add_bottom_panel_item(TTR("Search Results"), find_in_files);
+	//find_in_files_button = editor->add_bottom_panel_item(TTR("Search Results"), find_in_files);
 	find_in_files->set_custom_minimum_size(Size2(0, 200) * EDSCALE);
 	find_in_files->connect(FindInFilesPanel::SIGNAL_RESULT_SELECTED, callable_mp(this, &ScriptEditor::_on_find_in_files_result_selected));
 	find_in_files->connect(FindInFilesPanel::SIGNAL_FILES_MODIFIED, callable_mp(this, &ScriptEditor::_on_find_in_files_modified_files));
 	find_in_files->hide();
-	find_in_files_button->hide();
+	//find_in_files_button->hide();
 
 	history_pos = -1;
 

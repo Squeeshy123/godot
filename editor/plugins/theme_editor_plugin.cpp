@@ -1282,7 +1282,7 @@ bool ThemeEditorPlugin::handles(Object *p_node) const {
 void ThemeEditorPlugin::make_visible(bool p_visible) {
 	if (p_visible) {
 		theme_editor->set_process(true);
-		button->show();
+		//button->show();
 		editor->make_bottom_panel_item_visible(theme_editor);
 	} else {
 		theme_editor->set_process(false);
@@ -1290,7 +1290,7 @@ void ThemeEditorPlugin::make_visible(bool p_visible) {
 			editor->hide_bottom_panel();
 		}
 
-		button->hide();
+		//button->hide();
 	}
 }
 
@@ -1299,6 +1299,6 @@ ThemeEditorPlugin::ThemeEditorPlugin(EditorNode *p_node) {
 	theme_editor = memnew(ThemeEditor);
 	theme_editor->set_custom_minimum_size(Size2(0, 200) * EDSCALE);
 
-	button = editor->add_bottom_panel_item(TTR("Theme"), theme_editor);
-	button->hide();
+	editor->add_bottom_panel_item(TTR("Theme"), theme_editor);
+	//button->hide();
 }

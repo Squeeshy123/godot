@@ -4216,7 +4216,7 @@ void VisualShaderEditorPlugin::make_visible(bool p_visible) {
 	if (p_visible) {
 		//editor->hide_animation_player_editors();
 		//editor->animation_panel_make_visible(true);
-		button->show();
+		//button->show();
 		editor->make_bottom_panel_item_visible(visual_shader_editor);
 		visual_shader_editor->update_custom_nodes();
 		visual_shader_editor->set_process_input(true);
@@ -4225,7 +4225,7 @@ void VisualShaderEditorPlugin::make_visible(bool p_visible) {
 		if (visual_shader_editor->is_visible_in_tree()) {
 			editor->hide_bottom_panel();
 		}
-		button->hide();
+		//button->hide();
 		visual_shader_editor->set_process_input(false);
 		//visual_shader_editor->set_process(false);
 	}
@@ -4236,8 +4236,8 @@ VisualShaderEditorPlugin::VisualShaderEditorPlugin(EditorNode *p_node) {
 	visual_shader_editor = memnew(VisualShaderEditor);
 	visual_shader_editor->set_custom_minimum_size(Size2(0, 300) * EDSCALE);
 
-	button = editor->add_bottom_panel_item(TTR("VisualShader"), visual_shader_editor);
-	button->hide();
+	editor->add_bottom_panel_item(TTR("VisualShader"), visual_shader_editor);
+	//button->hide();
 }
 
 VisualShaderEditorPlugin::~VisualShaderEditorPlugin() {

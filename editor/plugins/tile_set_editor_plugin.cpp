@@ -3617,12 +3617,12 @@ bool TileSetEditorPlugin::handles(Object *p_node) const {
 
 void TileSetEditorPlugin::make_visible(bool p_visible) {
 	if (p_visible) {
-		tileset_editor_button->show();
+		//tileset_editor_button->show();
 		editor->make_bottom_panel_item_visible(tileset_editor);
 		get_tree()->connect("idle_frame", Callable(tileset_editor, "_on_workspace_process"));
 	} else {
 		editor->hide_bottom_panel();
-		tileset_editor_button->hide();
+		//tileset_editor_button->hide();
 		get_tree()->disconnect("idle_frame", Callable(tileset_editor, "_on_workspace_process"));
 	}
 }
@@ -3675,6 +3675,6 @@ TileSetEditorPlugin::TileSetEditorPlugin(EditorNode *p_node) {
 	tileset_editor->set_custom_minimum_size(Size2(0, 200) * EDSCALE);
 	tileset_editor->hide();
 
-	tileset_editor_button = p_node->add_bottom_panel_item(TTR("TileSet"), tileset_editor);
-	tileset_editor_button->hide();
+	p_node->add_bottom_panel_item(TTR("TileSet"), tileset_editor);
+	//tileset_editor_button->hide();
 }
