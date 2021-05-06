@@ -32,6 +32,7 @@
 #define LOCAL_VECTOR_H
 
 #include "core/error/error_macros.h"
+#include "core/os/copymem.h"
 #include "core/os/memory.h"
 #include "core/templates/sort_array.h"
 #include "core/templates/vector.h"
@@ -215,7 +216,7 @@ public:
 		Vector<T> ret;
 		ret.resize(size());
 		T *w = ret.ptrw();
-		memcpy(w, data, sizeof(T) * count);
+		copymem(w, data, sizeof(T) * count);
 		return ret;
 	}
 
@@ -223,7 +224,7 @@ public:
 		Vector<uint8_t> ret;
 		ret.resize(count * sizeof(T));
 		uint8_t *w = ret.ptrw();
-		memcpy(w, data, sizeof(T) * count);
+		copymem(w, data, sizeof(T) * count);
 		return ret;
 	}
 

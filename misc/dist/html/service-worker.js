@@ -5,11 +5,22 @@
 // previously cached resources to be updated from the network.
 const CACHE_VERSION = "@GODOT_VERSION@";
 const CACHE_NAME = "@GODOT_NAME@-cache";
-const OFFLINE_URL = "@GODOT_OFFLINE_PAGE@";
+const OFFLINE_URL = "offline.html";
 // Files that will be cached on load.
-const CACHED_FILES = @GODOT_CACHE@;
+const CACHED_FILES = [
+	"godot.tools.html",
+	"offline.html",
+	"godot.tools.js",
+	"godot.tools.worker.js",
+	"godot.tools.audio.worklet.js",
+	"logo.svg",
+	"favicon.png",
+];
+
 // Files that we might not want the user to preload, and will only be cached on first load.
-const CACHABLE_FILES = @GODOT_OPT_CACHE@;
+const CACHABLE_FILES = [
+	"godot.tools.wasm",
+];
 const FULL_CACHE = CACHED_FILES.concat(CACHABLE_FILES);
 
 self.addEventListener("install", (event) => {

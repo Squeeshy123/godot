@@ -134,7 +134,7 @@ private:
 		int start_column = 0;
 		bool enabled = false;
 		bool creating = false;
-		bool double_click = false;
+		bool doubleclick = false;
 		bool drag_attempt = false;
 		uint64_t last_dblclk = 0;
 	} selection;

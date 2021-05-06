@@ -38,6 +38,7 @@
 */
 
 #include "core/error/error_macros.h"
+#include "core/os/copymem.h"
 #include "core/os/memory.h"
 #include "core/templates/cowdata.h"
 #include "core/templates/sort_array.h"
@@ -65,7 +66,6 @@ private:
 public:
 	bool push_back(T p_elem);
 	_FORCE_INLINE_ bool append(const T &p_elem) { return push_back(p_elem); } //alias
-	void fill(T p_elem);
 
 	void remove(int p_index) { _cowdata.remove(p_index); }
 	void erase(const T &p_val) {
@@ -134,7 +134,7 @@ public:
 	Vector<uint8_t> to_byte_array() const {
 		Vector<uint8_t> ret;
 		ret.resize(size() * sizeof(T));
-		memcpy(ret.ptrw(), ptr(), sizeof(T) * size());
+		copymem(ret.ptrw(), ptr(), sizeof(T) * size());
 		return ret;
 	}
 
@@ -221,14 +221,6 @@ bool Vector<T>::push_back(T p_elem) {
 	set(size() - 1, p_elem);
 
 	return false;
-}
-
-template <class T>
-void Vector<T>::fill(T p_elem) {
-	T *p = ptrw();
-	for (int i = 0; i < size(); i++) {
-		p[i] = p_elem;
-	}
 }
 
 #endif // VECTOR_H

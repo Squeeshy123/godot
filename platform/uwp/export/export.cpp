@@ -1336,7 +1336,7 @@ public:
 			int base = clf.size();
 			clf.resize(base + 4 + txt.length());
 			encode_uint32(txt.length(), &clf.write[base]);
-			memcpy(&clf.write[base + 4], txt.ptr(), txt.length());
+			copymem(&clf.write[base + 4], txt.ptr(), txt.length());
 			print_line(itos(i) + " param: " + cl[i]);
 		}
 

@@ -136,13 +136,13 @@ DisplayServerIPhone::~DisplayServerIPhone() {
 		if (rendering_device_vulkan) {
 			rendering_device_vulkan->finalize();
 			memdelete(rendering_device_vulkan);
-			rendering_device_vulkan = nullptr;
+			rendering_device_vulkan = NULL;
 		}
 
 		if (context_vulkan) {
 			context_vulkan->window_destroy(MAIN_WINDOW_ID);
 			memdelete(context_vulkan);
-			context_vulkan = nullptr;
+			context_vulkan = NULL;
 		}
 	}
 #endif
@@ -222,7 +222,7 @@ void DisplayServerIPhone::_window_callback(const Callable &p_callable, const Var
 
 // MARK: Touches
 
-void DisplayServerIPhone::touch_press(int p_idx, int p_x, int p_y, bool p_pressed, bool p_double_click) {
+void DisplayServerIPhone::touch_press(int p_idx, int p_x, int p_y, bool p_pressed, bool p_doubleclick) {
 	if (!GLOBAL_DEF("debug/disable_touch", false)) {
 		Ref<InputEventScreenTouch> ev;
 		ev.instance();

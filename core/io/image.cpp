@@ -34,6 +34,7 @@
 #include "core/io/image_loader.h"
 #include "core/io/resource_loader.h"
 #include "core/math/math_funcs.h"
+#include "core/os/copymem.h"
 #include "core/string/print_string.h"
 #include "core/templates/hash_map.h"
 
@@ -1536,7 +1537,7 @@ void Image::shrink_x2() {
 			uint8_t *w = new_img.ptrw();
 			const uint8_t *r = data.ptr();
 
-			memcpy(w, &r[ofs], new_size);
+			copymem(w, &r[ofs], new_size);
 		}
 
 		width = MAX(width / 2, 1);
@@ -1931,7 +1932,7 @@ Error Image::generate_mipmap_roughness(RoughnessChannel p_roughness_channel, con
 
 
 			uint8_t* wr = imgdata.ptrw();
-			memcpy(wr.ptr(), ptr, size);
+			copymem(wr.ptr(), ptr, size);
 			wr = uint8_t*();
 			Ref<Image> im;
 			im.instance();
@@ -1981,7 +1982,7 @@ void Image::create(int p_width, int p_height, bool p_use_mipmaps, Format p_forma
 
 	{
 		uint8_t *w = data.ptrw();
-		memset(w, 0, size);
+		zeromem(w, size);
 	}
 
 	width = p_width;
@@ -3294,7 +3295,7 @@ Ref<Image> Image::get_image_from_mipmap(int p_mipamp) const {
 	{
 		uint8_t *wr = new_data.ptrw();
 		const uint8_t *rd = data.ptr();
-		memcpy(wr, rd + ofs, size);
+		copymem(wr, rd + ofs, size);
 	}
 
 	Ref<Image> image;
@@ -3621,5 +3622,5 @@ Ref<Resource> Image::duplicate(bool p_subresources) const {
 }
 
 void Image::set_as_black() {
-	memset(data.ptrw(), 0, data.size());
+	zeromem(data.ptrw(), data.size());
 }

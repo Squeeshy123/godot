@@ -40,7 +40,6 @@
 #include "editor/inspector_dock.h"
 #include "editor/property_editor.h"
 #include "editor/scene_tree_dock.h"
-#include "scene/gui/link_button.h"
 
 typedef void (*EditorNodeInitCallback)();
 typedef void (*EditorPluginInitializeCallback)();
@@ -478,7 +477,6 @@ private:
 	void _close_messages();
 	void _show_messages();
 	void _vp_resized();
-	void _version_button_pressed();
 
 	int _save_external_resources();
 

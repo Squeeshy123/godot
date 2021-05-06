@@ -57,9 +57,9 @@ protected:
 	};
 
 	Vector3 sep_axis;
-	bool collided = false;
+	bool collided;
 
-	Space3DSW *space = nullptr;
+	Space3DSW *space;
 
 	BodyContact3DSW(Body3DSW **p_body_ptr = nullptr, int p_body_count = 0) :
 			Constraint3DSW(p_body_ptr, p_body_count) {
@@ -77,21 +77,16 @@ class BodyPair3DSW : public BodyContact3DSW {
 			Body3DSW *B;
 		};
 
-		Body3DSW *_arr[2] = { nullptr, nullptr };
+		Body3DSW *_arr[2];
 	};
 
-	int shape_A = 0;
-	int shape_B = 0;
-
-	bool dynamic_A = false;
-	bool dynamic_B = false;
-
-	bool report_contacts_only = false;
+	int shape_A;
+	int shape_B;
 
 	Vector3 offset_B; //use local A coordinates to avoid numerical issues on collision detection
 
 	Contact contacts[MAX_CONTACTS];
-	int contact_count = 0;
+	int contact_count;
 
 	static void _contact_added_callback(const Vector3 &p_point_A, int p_index_A, const Vector3 &p_point_B, int p_index_B, void *p_userdata);
 
@@ -101,21 +96,18 @@ class BodyPair3DSW : public BodyContact3DSW {
 	bool _test_ccd(real_t p_step, Body3DSW *p_A, int p_shape_A, const Transform &p_xform_A, Body3DSW *p_B, int p_shape_B, const Transform &p_xform_B);
 
 public:
-	virtual bool setup(real_t p_step) override;
-	virtual bool pre_solve(real_t p_step) override;
-	virtual void solve(real_t p_step) override;
+	bool setup(real_t p_step);
+	void solve(real_t p_step);
 
 	BodyPair3DSW(Body3DSW *p_A, int p_shape_A, Body3DSW *p_B, int p_shape_B);
 	~BodyPair3DSW();
 };
 
 class BodySoftBodyPair3DSW : public BodyContact3DSW {
-	Body3DSW *body = nullptr;
-	SoftBody3DSW *soft_body = nullptr;
+	Body3DSW *body;
+	SoftBody3DSW *soft_body;
 
-	int body_shape = 0;
-
-	bool body_dynamic = false;
+	int body_shape;
 
 	LocalVector<Contact> contacts;
 
@@ -126,12 +118,8 @@ class BodySoftBodyPair3DSW : public BodyContact3DSW {
 	void validate_contacts();
 
 public:
-	virtual bool setup(real_t p_step) override;
-	virtual bool pre_solve(real_t p_step) override;
-	virtual void solve(real_t p_step) override;
-
-	virtual SoftBody3DSW *get_soft_body_ptr(int p_index) const override { return soft_body; }
-	virtual int get_soft_body_count() const override { return 1; }
+	bool setup(real_t p_step);
+	void solve(real_t p_step);
 
 	BodySoftBodyPair3DSW(Body3DSW *p_A, int p_shape_A, SoftBody3DSW *p_B);
 	~BodySoftBodyPair3DSW();

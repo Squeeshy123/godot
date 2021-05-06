@@ -31,6 +31,7 @@
 #include "pool_allocator.h"
 
 #include "core/error/error_macros.h"
+#include "core/os/copymem.h"
 #include "core/os/memory.h"
 #include "core/os/os.h"
 #include "core/string/print_string.h"
@@ -41,7 +42,7 @@
 	do {                                                      \
 		void *_dst = &((unsigned char *)pool)[m_to_pos];      \
 		void *_src = &((unsigned char *)pool)[(m_entry).pos]; \
-		memmove(_dst, _src, aligned((m_entry).len));          \
+		movemem(_dst, _src, aligned((m_entry).len));          \
 		(m_entry).pos = m_to_pos;                             \
 	} while (0);
 

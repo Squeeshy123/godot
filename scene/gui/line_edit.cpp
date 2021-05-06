@@ -155,7 +155,6 @@ void LineEdit::_backspace(bool p_word, bool p_all_to_left) {
 		for (int i = words.size() - 1; i >= 0; i--) {
 			if (words[i].x < cc) {
 				cc = words[i].x;
-				break;
 			}
 		}
 
@@ -203,7 +202,6 @@ void LineEdit::_delete(bool p_word, bool p_all_to_right) {
 		}
 
 		delete_text(caret_column, cc);
-		set_caret_column(caret_column);
 	} else {
 		if (caret_mid_grapheme_enabled) {
 			set_caret_column(caret_column + 1);
@@ -260,15 +258,15 @@ void LineEdit::_gui_input(Ref<InputEvent> p_event) {
 
 			} else {
 				if (selecting_enabled) {
-					if (!b->is_double_click() && (OS::get_singleton()->get_ticks_msec() - selection.last_dblclk) < 600) {
+					if (!b->is_doubleclick() && (OS::get_singleton()->get_ticks_msec() - selection.last_dblclk) < 600) {
 						// Triple-click select all.
 						selection.enabled = true;
 						selection.begin = 0;
 						selection.end = text.length();
-						selection.double_click = true;
+						selection.doubleclick = true;
 						selection.last_dblclk = 0;
 						caret_column = selection.begin;
-					} else if (b->is_double_click()) {
+					} else if (b->is_doubleclick()) {
 						// Double-click select word.
 						Vector<Vector2i> words = TS->shaped_text_get_word_breaks(text_rid);
 						for (int i = 0; i < words.size(); i++) {
@@ -276,7 +274,7 @@ void LineEdit::_gui_input(Ref<InputEvent> p_event) {
 								selection.enabled = true;
 								selection.begin = words[i].x;
 								selection.end = words[i].y;
-								selection.double_click = true;
+								selection.doubleclick = true;
 								selection.last_dblclk = OS::get_singleton()->get_ticks_msec();
 								caret_column = selection.end;
 								break;
@@ -308,11 +306,11 @@ void LineEdit::_gui_input(Ref<InputEvent> p_event) {
 				}
 			}
 
-			if ((!selection.creating) && (!selection.double_click)) {
+			if ((!selection.creating) && (!selection.doubleclick)) {
 				deselect();
 			}
 			selection.creating = false;
-			selection.double_click = false;
+			selection.doubleclick = false;
 
 			show_virtual_keyboard();
 		}
@@ -1532,7 +1530,7 @@ void LineEdit::deselect() {
 	selection.start_column = 0;
 	selection.enabled = false;
 	selection.creating = false;
-	selection.double_click = false;
+	selection.doubleclick = false;
 	update();
 }
 
@@ -1659,7 +1657,7 @@ void LineEdit::select(int p_from, int p_to) {
 	selection.begin = p_from;
 	selection.end = p_to;
 	selection.creating = false;
-	selection.double_click = false;
+	selection.doubleclick = false;
 	update();
 }
 

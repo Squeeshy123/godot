@@ -759,7 +759,7 @@ public:
 
 	const AnimationMap &Curves() const;
 
-	/** Object the curve is assigned to, this can be nullptr if the
+	/** Object the curve is assigned to, this can be NULL if the
      *  target object has no DOM representation or could not
      *  be read for other reasons.*/
 	Object *Target() const {
@@ -989,7 +989,7 @@ public:
 
 	// note: a connection ensures that the source and dest objects exist, but
 	// not that they have DOM representations, so the return value of one of
-	// these functions can still be nullptr.
+	// these functions can still be NULL.
 	Object *SourceObject() const;
 	Object *DestinationObject() const;
 

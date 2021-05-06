@@ -270,7 +270,6 @@ public:
 class GDScriptInstance : public ScriptInstance {
 	friend class GDScript;
 	friend class GDScriptFunction;
-	friend class GDScriptLambdaCallable;
 	friend class GDScriptCompiler;
 	friend struct GDScriptUtilityFunctionsDefinitions;
 

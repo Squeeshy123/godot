@@ -147,7 +147,6 @@ public:
 
 private:
 	void update_navigation();
-	void _check_distance_to_target();
 };
 
 #endif

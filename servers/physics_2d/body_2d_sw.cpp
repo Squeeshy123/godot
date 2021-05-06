@@ -104,17 +104,31 @@ void Body2DSW::set_active(bool p_active) {
 	}
 
 	active = p_active;
-
-	if (active) {
+	if (!p_active) {
+		if (get_space()) {
+			get_space()->body_remove_from_active_list(&active_list);
+		}
+	} else {
 		if (mode == PhysicsServer2D::BODY_MODE_STATIC) {
-			// Static bodies can't be active.
-			active = false;
-		} else if (get_space()) {
+			return; //static bodies can't become active
+		}
+		if (get_space()) {
 			get_space()->body_add_to_active_list(&active_list);
 		}
-	} else if (get_space()) {
-		get_space()->body_remove_from_active_list(&active_list);
+
+		//still_time=0;
 	}
+	/*
+	if (!space)
+		return;
+
+	for(int i=0;i<get_shape_count();i++) {
+		Shape &s=shapes[i];
+		if (s.bpid>0) {
+			get_space()->get_broadphase()->set_active(s.bpid,active);
+		}
+	}
+*/
 }
 
 void Body2DSW::set_param(PhysicsServer2D::BodyParameter p_param, real_t p_value) {
@@ -356,6 +370,13 @@ void Body2DSW::set_space(Space2DSW *p_space) {
 		if (active) {
 			get_space()->body_add_to_active_list(&active_list);
 		}
+		/*
+		_update_queries();
+		if (is_active()) {
+			active=false;
+			set_active(true);
+		}
+		*/
 	}
 
 	first_integration = false;

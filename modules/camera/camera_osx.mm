@@ -106,15 +106,15 @@
 	if (input) {
 		[self removeInput:input];
 		// don't release this
-		input = nullptr;
+		input = NULL;
 	}
 
 	// free up our output
 	if (output) {
 		[self removeOutput:output];
-		[output setSampleBufferDelegate:nil queue:nullptr];
+		[output setSampleBufferDelegate:nil queue:NULL];
 		[output release];
-		output = nullptr;
+		output = NULL;
 	}
 
 	[self commitConfiguration];
@@ -141,9 +141,9 @@
 	// get our buffers
 	unsigned char *dataY = (unsigned char *)CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0);
 	unsigned char *dataCbCr = (unsigned char *)CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 1);
-	if (dataY == nullptr) {
+	if (dataY == NULL) {
 		print_line("Couldn't access Y pixel buffer data");
-	} else if (dataCbCr == nullptr) {
+	} else if (dataCbCr == NULL) {
 		print_line("Couldn't access CbCr pixel buffer data");
 	} else {
 		Ref<Image> img[2];
@@ -220,8 +220,8 @@ AVCaptureDevice *CameraFeedOSX::get_device() const {
 };
 
 CameraFeedOSX::CameraFeedOSX() {
-	device = nullptr;
-	capture_session = nullptr;
+	device = NULL;
+	capture_session = NULL;
 };
 
 void CameraFeedOSX::set_device(AVCaptureDevice *p_device) {
@@ -240,14 +240,14 @@ void CameraFeedOSX::set_device(AVCaptureDevice *p_device) {
 };
 
 CameraFeedOSX::~CameraFeedOSX() {
-	if (capture_session != nullptr) {
+	if (capture_session != NULL) {
 		[capture_session release];
-		capture_session = nullptr;
+		capture_session = NULL;
 	};
 
-	if (device != nullptr) {
+	if (device != NULL) {
 		[device release];
-		device = nullptr;
+		device = NULL;
 	};
 };
 
@@ -267,7 +267,7 @@ void CameraFeedOSX::deactivate_feed() {
 	if (capture_session) {
 		[capture_session cleanup];
 		[capture_session release];
-		capture_session = nullptr;
+		capture_session = NULL;
 	};
 };
 

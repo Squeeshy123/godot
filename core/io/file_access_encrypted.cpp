@@ -31,6 +31,7 @@
 #include "file_access_encrypted.h"
 
 #include "core/crypto/crypto_core.h"
+#include "core/os/copymem.h"
 #include "core/string/print_string.h"
 #include "core/variant/variant.h"
 
@@ -150,7 +151,7 @@ void FileAccessEncrypted::_release() {
 		ERR_FAIL_COND(CryptoCore::md5(data.ptr(), data.size(), hash) != OK); // Bug?
 
 		compressed.resize(len);
-		memset(compressed.ptrw(), 0, len);
+		zeromem(compressed.ptrw(), len);
 		for (int i = 0; i < data.size(); i++) {
 			compressed.write[i] = data[i];
 		}

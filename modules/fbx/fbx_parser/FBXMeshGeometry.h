@@ -96,7 +96,7 @@ public:
 	Geometry(uint64_t id, const ElementPtr element, const std::string &name, const Document &doc);
 	virtual ~Geometry();
 
-	/** Get the Skin attached to this geometry or nullptr */
+	/** Get the Skin attached to this geometry or NULL */
 	const Skin *DeformerSkin() const;
 
 	const std::vector<const BlendShape *> &get_blend_shapes() const;

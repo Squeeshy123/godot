@@ -31,6 +31,7 @@
 #include "transform.h"
 
 #include "core/math/math_funcs.h"
+#include "core/os/copymem.h"
 #include "core/string/print_string.h"
 
 void Transform::affine_invert() {

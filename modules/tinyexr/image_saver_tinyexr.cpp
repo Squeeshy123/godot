@@ -169,7 +169,7 @@ Error save_exr(const String &p_path, const Ref<Image> &p_img, bool p_grayscale) 
 		{ 0 }, // R
 		{ 1, 0 }, // GR
 		{ 2, 1, 0 }, // BGR
-		{ 3, 2, 1, 0 } // ABGR
+		{ 2, 1, 0, 3 } // BGRA
 	};
 
 	int channel_count = get_channel_count(format);

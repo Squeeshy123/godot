@@ -44,16 +44,13 @@ class BodyPair2DSW : public Constraint2DSW {
 			Body2DSW *B;
 		};
 
-		Body2DSW *_arr[2] = { nullptr, nullptr };
+		Body2DSW *_arr[2];
 	};
 
-	int shape_A = 0;
-	int shape_B = 0;
+	int shape_A;
+	int shape_B;
 
-	bool dynamic_A = false;
-	bool dynamic_B = false;
-
-	Space2DSW *space = nullptr;
+	Space2DSW *space;
 
 	struct Contact {
 		Vector2 position;
@@ -76,10 +73,10 @@ class BodyPair2DSW : public Constraint2DSW {
 
 	Vector2 sep_axis;
 	Contact contacts[MAX_CONTACTS];
-	int contact_count = 0;
-	bool collided = false;
-	bool oneway_disabled = false;
-	bool report_contacts_only = false;
+	int contact_count;
+	bool collided;
+	bool oneway_disabled;
+	int cc;
 
 	bool _test_ccd(real_t p_step, Body2DSW *p_A, int p_shape_A, const Transform2D &p_xform_A, Body2DSW *p_B, int p_shape_B, const Transform2D &p_xform_B, bool p_swap_result = false);
 	void _validate_contacts();
@@ -87,9 +84,8 @@ class BodyPair2DSW : public Constraint2DSW {
 	_FORCE_INLINE_ void _contact_added_callback(const Vector2 &p_point_A, const Vector2 &p_point_B);
 
 public:
-	virtual bool setup(real_t p_step) override;
-	virtual bool pre_solve(real_t p_step) override;
-	virtual void solve(real_t p_step) override;
+	bool setup(real_t p_step);
+	void solve(real_t p_step);
 
 	BodyPair2DSW(Body2DSW *p_A, int p_shape_A, Body2DSW *p_B, int p_shape_B);
 	~BodyPair2DSW();

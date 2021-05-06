@@ -5,5 +5,4 @@ Import("env")
 env.add_source_files(env.servers_sources, "*.cpp")
 
 SConscript("forward_clustered/SCsub")
-SConscript("forward_mobile/SCsub")
 SConscript("shaders/SCsub")

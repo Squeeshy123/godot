@@ -1091,34 +1091,6 @@ GDScriptCodeGenerator::Address GDScriptCompiler::_parse_expression(CodeGen &code
 			}
 			return GDScriptCodeGenerator::Address(); // Assignment does not return a value.
 		} break;
-		case GDScriptParser::Node::LAMBDA: {
-			const GDScriptParser::LambdaNode *lambda = static_cast<const GDScriptParser::LambdaNode *>(p_expression);
-			GDScriptCodeGenerator::Address result = codegen.add_temporary(_gdtype_from_datatype(lambda->get_datatype()));
-
-			Vector<GDScriptCodeGenerator::Address> captures;
-			captures.resize(lambda->captures.size());
-			for (int i = 0; i < lambda->captures.size(); i++) {
-				captures.write[i] = _parse_expression(codegen, r_error, lambda->captures[i]);
-				if (r_error) {
-					return GDScriptCodeGenerator::Address();
-				}
-			}
-
-			GDScriptFunction *function = _parse_function(r_error, codegen.script, codegen.class_node, lambda->function, false, true);
-			if (r_error) {
-				return GDScriptCodeGenerator::Address();
-			}
-
-			gen->write_lambda(result, function, captures);
-
-			for (int i = 0; i < captures.size(); i++) {
-				if (captures[i].mode == GDScriptCodeGenerator::Address::TEMPORARY) {
-					gen->pop_temporary();
-				}
-			}
-
-			return result;
-		} break;
 		default: {
 			ERR_FAIL_V_MSG(GDScriptCodeGenerator::Address(), "Bug in bytecode compiler, unexpected node in parse tree while parsing expression."); // Unreachable code.
 		} break;
@@ -1832,8 +1804,8 @@ Error GDScriptCompiler::_parse_block(CodeGen &codegen, const GDScriptParser::Sui
 	return OK;
 }
 
-GDScriptFunction *GDScriptCompiler::_parse_function(Error &r_error, GDScript *p_script, const GDScriptParser::ClassNode *p_class, const GDScriptParser::FunctionNode *p_func, bool p_for_ready, bool p_for_lambda) {
-	r_error = OK;
+Error GDScriptCompiler::_parse_function(GDScript *p_script, const GDScriptParser::ClassNode *p_class, const GDScriptParser::FunctionNode *p_func, bool p_for_ready) {
+	Error error = OK;
 	CodeGen codegen;
 	codegen.generator = memnew(GDScriptByteCodeGenerator);
 
@@ -1850,11 +1822,7 @@ GDScriptFunction *GDScriptCompiler::_parse_function(Error &r_error, GDScript *p_
 	return_type.builtin_type = Variant::NIL;
 
 	if (p_func) {
-		if (p_func->identifier) {
-			func_name = p_func->identifier->name;
-		} else {
-			func_name = "<anonymous lambda>";
-		}
+		func_name = p_func->identifier->name;
 		is_static = p_func->is_static;
 		rpc_mode = p_func->rpc_mode;
 		return_type = _gdtype_from_datatype(p_func->get_datatype(), p_script);
@@ -1885,11 +1853,11 @@ GDScriptFunction *GDScriptCompiler::_parse_function(Error &r_error, GDScript *p_
 	}
 
 	// Parse initializer if applies.
-	bool is_implicit_initializer = !p_for_ready && !p_func && !p_for_lambda;
-	bool is_initializer = p_func && !p_for_lambda && String(p_func->identifier->name) == GDScriptLanguage::get_singleton()->strings._init;
-	bool is_for_ready = p_for_ready || (p_func && !p_for_lambda && String(p_func->identifier->name) == "_ready");
+	bool is_implicit_initializer = !p_for_ready && !p_func;
+	bool is_initializer = p_func && String(p_func->identifier->name) == GDScriptLanguage::get_singleton()->strings._init;
+	bool is_for_ready = p_for_ready || (p_func && String(p_func->identifier->name) == "_ready");
 
-	if (!p_for_lambda && (is_implicit_initializer || is_for_ready)) {
+	if (is_implicit_initializer || is_for_ready) {
 		// Initialize class fields.
 		for (int i = 0; i < p_class->members.size(); i++) {
 			if (p_class->members[i].type != GDScriptParser::ClassNode::Member::VARIABLE) {
@@ -1916,10 +1884,10 @@ GDScriptFunction *GDScriptCompiler::_parse_function(Error &r_error, GDScript *p_
 						codegen.generator->write_construct_array(dst_address, Vector<GDScriptCodeGenerator::Address>());
 					}
 				}
-				GDScriptCodeGenerator::Address src_address = _parse_expression(codegen, r_error, field->initializer, false, true);
-				if (r_error) {
+				GDScriptCodeGenerator::Address src_address = _parse_expression(codegen, error, field->initializer, false, true);
+				if (error) {
 					memdelete(codegen.generator);
-					return nullptr;
+					return error;
 				}
 
 				codegen.generator->write_assign(dst_address, src_address);
@@ -1946,10 +1914,10 @@ GDScriptFunction *GDScriptCompiler::_parse_function(Error &r_error, GDScript *p_
 			codegen.generator->start_parameters();
 			for (int i = p_func->parameters.size() - optional_parameters; i < p_func->parameters.size(); i++) {
 				const GDScriptParser::ParameterNode *parameter = p_func->parameters[i];
-				GDScriptCodeGenerator::Address src_addr = _parse_expression(codegen, r_error, parameter->default_value, true);
-				if (r_error) {
+				GDScriptCodeGenerator::Address src_addr = _parse_expression(codegen, error, parameter->default_value, true);
+				if (error) {
 					memdelete(codegen.generator);
-					return nullptr;
+					return error;
 				}
 				GDScriptCodeGenerator::Address dst_addr = codegen.parameters[parameter->identifier->name];
 				codegen.generator->write_assign_default_parameter(dst_addr, src_addr);
@@ -1960,10 +1928,10 @@ GDScriptFunction *GDScriptCompiler::_parse_function(Error &r_error, GDScript *p_
 			codegen.generator->end_parameters();
 		}
 
-		r_error = _parse_block(codegen, p_func->body);
-		if (r_error) {
+		Error err = _parse_block(codegen, p_func->body);
+		if (err) {
 			memdelete(codegen.generator);
-			return nullptr;
+			return err;
 		}
 	}
 
@@ -1989,10 +1957,6 @@ GDScriptFunction *GDScriptCompiler::_parse_function(Error &r_error, GDScript *p_
 			signature += "::" + String(func_name);
 		}
 
-		if (p_for_lambda) {
-			signature += "(lambda)";
-		}
-
 		codegen.generator->set_signature(signature);
 	}
 #endif
@@ -2000,10 +1964,8 @@ GDScriptFunction *GDScriptCompiler::_parse_function(Error &r_error, GDScript *p_
 	if (p_func) {
 		codegen.generator->set_initial_line(p_func->start_line);
 #ifdef TOOLS_ENABLED
-		if (!p_for_lambda) {
-			p_script->member_lines[func_name] = p_func->start_line;
-			p_script->doc_functions[func_name] = p_func->doc_description;
-		}
+		p_script->member_lines[func_name] = p_func->start_line;
+		p_script->doc_functions[func_name] = p_func->doc_description;
 #endif
 	} else {
 		codegen.generator->set_initial_line(0);
@@ -2032,13 +1994,11 @@ GDScriptFunction *GDScriptCompiler::_parse_function(Error &r_error, GDScript *p_
 #endif
 	}
 
-	if (!p_for_lambda) {
-		p_script->member_functions[func_name] = gd_function;
-	}
+	p_script->member_functions[func_name] = gd_function;
 
 	memdelete(codegen.generator);
 
-	return gd_function;
+	return OK;
 }
 
 Error GDScriptCompiler::_parse_setter_getter(GDScript *p_script, const GDScriptParser::ClassNode *p_class, const GDScriptParser::VariableNode *p_variable, bool p_is_setter) {
@@ -2431,8 +2391,7 @@ Error GDScriptCompiler::_parse_class_blocks(GDScript *p_script, const GDScriptPa
 			if (!has_ready && function->identifier->name == "_ready") {
 				has_ready = true;
 			}
-			Error err = OK;
-			_parse_function(err, p_script, p_class, function);
+			Error err = _parse_function(p_script, p_class, function);
 			if (err) {
 				return err;
 			}
@@ -2457,8 +2416,7 @@ Error GDScriptCompiler::_parse_class_blocks(GDScript *p_script, const GDScriptPa
 
 	{
 		// Create an implicit constructor in any case.
-		Error err = OK;
-		_parse_function(err, p_script, p_class, nullptr);
+		Error err = _parse_function(p_script, p_class, nullptr);
 		if (err) {
 			return err;
 		}
@@ -2466,8 +2424,7 @@ Error GDScriptCompiler::_parse_class_blocks(GDScript *p_script, const GDScriptPa
 
 	if (!has_ready && p_class->onready_used) {
 		//create a _ready constructor
-		Error err = OK;
-		_parse_function(err, p_script, p_class, nullptr, true);
+		Error err = _parse_function(p_script, p_class, nullptr, true);
 		if (err) {
 			return err;
 		}

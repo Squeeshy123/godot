@@ -325,7 +325,7 @@ Video::Video(uint64_t id, const ElementPtr element, const Document &doc, const s
 					DOMError("embedded content is not surrounded by quotation marks", element);
 				} else {
 					size_t targetLength = 0;
-					const size_t numTokens = Content->Tokens().size();
+					auto numTokens = Content->Tokens().size();
 					// First time compute size (it could be large like 64Gb and it is good to allocate it once)
 					for (uint32_t tokenIdx = 0; tokenIdx < numTokens; ++tokenIdx) {
 						const Token *dataToken = GetRequiredToken(Content, tokenIdx);

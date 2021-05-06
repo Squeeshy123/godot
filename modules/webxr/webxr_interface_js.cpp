@@ -253,7 +253,7 @@ bool WebXRInterfaceJS::initialize() {
 void WebXRInterfaceJS::uninitialize() {
 	if (initialized) {
 		XRServer *xr_server = XRServer::get_singleton();
-		if (xr_server != nullptr) {
+		if (xr_server != NULL) {
 			// no longer our primary interface
 			xr_server->clear_primary_interface_if(this);
 		}

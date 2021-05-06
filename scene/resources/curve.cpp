@@ -445,10 +445,10 @@ void Curve::set_bake_resolution(int p_resolution) {
 	_baked_cache_dirty = true;
 }
 
-real_t Curve::interpolate_baked(real_t offset) const {
+real_t Curve::interpolate_baked(real_t offset) {
 	if (_baked_cache_dirty) {
 		// Last-second bake if not done already
-		const_cast<Curve *>(this)->bake();
+		bake();
 	}
 
 	// Special cases if the cache is too small

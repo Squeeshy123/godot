@@ -110,7 +110,6 @@ uint32_t CollisionObject3D::get_collision_mask() const {
 }
 
 void CollisionObject3D::set_collision_layer_bit(int p_bit, bool p_value) {
-	ERR_FAIL_INDEX_MSG(p_bit, 32, "Collision layer bit must be between 0 and 31 inclusive.");
 	uint32_t collision_layer = get_collision_layer();
 	if (p_value) {
 		collision_layer |= 1 << p_bit;
@@ -121,12 +120,10 @@ void CollisionObject3D::set_collision_layer_bit(int p_bit, bool p_value) {
 }
 
 bool CollisionObject3D::get_collision_layer_bit(int p_bit) const {
-	ERR_FAIL_INDEX_V_MSG(p_bit, 32, false, "Collision layer bit must be between 0 and 31 inclusive.");
 	return get_collision_layer() & (1 << p_bit);
 }
 
 void CollisionObject3D::set_collision_mask_bit(int p_bit, bool p_value) {
-	ERR_FAIL_INDEX_MSG(p_bit, 32, "Collision mask bit must be between 0 and 31 inclusive.");
 	uint32_t mask = get_collision_mask();
 	if (p_value) {
 		mask |= 1 << p_bit;
@@ -137,7 +134,6 @@ void CollisionObject3D::set_collision_mask_bit(int p_bit, bool p_value) {
 }
 
 bool CollisionObject3D::get_collision_mask_bit(int p_bit) const {
-	ERR_FAIL_INDEX_V_MSG(p_bit, 32, false, "Collision mask bit must be between 0 and 31 inclusive.");
 	return get_collision_mask() & (1 << p_bit);
 }
 

@@ -112,7 +112,7 @@ task copyReleaseAARToBin(type: Copy) {
  * The zip file also includes some gradle tools to allow building of the custom build.
  */
 task zipCustomBuild(type: Zip) {
-    onlyIf { generateGodotTemplates.state.executed || generateDevTemplate.state.executed }
+    dependsOn ':generateGodotTemplates'
     doFirst {
         logger.lifecycle("Generating Godot custom build template")
     }

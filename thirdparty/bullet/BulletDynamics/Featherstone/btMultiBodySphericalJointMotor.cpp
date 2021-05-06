@@ -45,6 +45,7 @@ void btMultiBodySphericalJointMotor::finalizeMultiDof()
 	unsigned int offset = 6 + (m_bodyA->getLink(m_linkA).m_dofOffset + linkDoF);
 
 	// row 0: the lower bound
+	// row 0: the lower bound
 	jacobianA(0)[offset] = 1;
 
 	m_numDofsFinalized = m_jacSizeBoth;
